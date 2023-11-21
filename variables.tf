@@ -9,3 +9,7 @@ variable "project_number" {
 variable "project_region" {
   type = string
 }
+
+variable "github_token" {
+  type = string
+}
