@@ -24,14 +24,16 @@ fi
 gcloud config set project "$PROJECT_ID"
 echo "Project '$PROJECT_ID' set as the default project."
 
-#update terraform variable values for project_id and project_region
+#update terraform variables values 
 echo "Update values in variables.auto.tfvars"
 PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
 PROJECT_REGION=$(gcloud config get-value compute/region)
 sed -i "s/^project_id = .*/project_id = \"$PROJECT_ID\"/" variables.auto.tfvars
 sed -i "s/^project_number = .*/project_number = \"$PROJECT_NUMBER\"/" variables.auto.tfvars
 sed -i "s/^project_region = .*/project_region = \"$PROJECT_REGION\"/" variables.auto.tfvars
-sed -i 's/ABC/'"$PROJECT_PREFIX-terraform-state-$PROJECT_ID_HASH"'/g' backend.tf
+TERRAFORM_STATE_BUCKET=$PROJECT_PREFIX-terraform-state-$PROJECT_ID_HASH
+sed -i "s/bucket = .*/bucket = \"$TERRAFORM_STATE_BUCKET\"/" backend.tf
+
 
 #create PROJECT_ID environmental variable
 export PROJECT_ID=$PROJECT_ID
@@ -40,7 +42,6 @@ export PROJECT_ID=$PROJECT_ID
 gcloud auth application-default login
 
 #create terraform state bucket
-TERRAFORM_STATE_BUCKET=$PROJECT_PREFIX-terraform-state-$PROJECT_ID_HASH
 # Run gsutil ls -b to check if the bucket exists
 if gsutil ls -b gs://$TERRAFORM_STATE_BUCKET &> /dev/null; then
   echo "Bucket '$TERRAFORM_STATE_BUCKET' exists."
