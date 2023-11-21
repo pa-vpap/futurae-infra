@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Set your desired project ID and name
 PROJECT_PREFIX="prj-futurae"
@@ -30,7 +31,7 @@ PROJECT_REGION=$(gcloud config get-value compute/region)
 sed -i "s/^project_id = .*/project_id = \"$PROJECT_ID\"/" variables.auto.tfvars
 sed -i "s/^project_number = .*/project_number = \"$PROJECT_NUMBER\"/" variables.auto.tfvars
 sed -i "s/^project_region = .*/project_region = \"$PROJECT_REGION\"/" variables.auto.tfvars
-
+sed -i 's/ABC/'"$PROJECT_PREFIX-terraform-state-$PROJECT_ID_HASH"'/g' backend.tf
 
 #create PROJECT_ID environmental variable
 export PROJECT_ID=$PROJECT_ID
