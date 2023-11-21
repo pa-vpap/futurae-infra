@@ -34,7 +34,8 @@ resource "google_secret_manager_secret_version" "github_token_secret_version" {
 data "google_iam_policy" "serviceagent_secretAccessor" {
     binding {
         role = "roles/secretmanager.secretAccessor"
-        members = ["serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"]
+        members = [
+          "serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"]
     }
 }
 
@@ -59,7 +60,7 @@ resource "google_cloudbuildv2_connection" "cloudbuild-github" {
     depends_on = [google_secret_manager_secret_iam_policy.policy]
 }
 
-resource "google_cloudbuildv2_repository" "my-repository" {
+resource "google_cloudbuildv2_repository" "futurae-source" {
   project = var.project_id
   location = var.project_region
   name = "futurae-source"
