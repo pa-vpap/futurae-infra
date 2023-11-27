@@ -1,4 +1,5 @@
 locals {
+  #application ID defines in github account- settings- applications (Google CLoud Build) - configure (https://github.com/settings/installations) value is on browser bar
   APP_INSTALLATION_ID = 44252006
 }
 resource "google_project_service" "cloudbuild" {
